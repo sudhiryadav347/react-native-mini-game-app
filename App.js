@@ -39,7 +39,7 @@ export default function App() {
   }
 
   if (gameIsOver && pickedNumber) {
-    screen = <GameOverScreen />
+    screen = <GameOverScreen userNumber={pickedNumber}/>
   }
 
 
