@@ -3,18 +3,18 @@ import Colors from '../../constants/colors'
 import { View, Text, StyleSheet } from 'react-native'
 import PrimaryButton from '../ui/PrimaryButton'
 
-export default function NumberContainer({children}) {
+export default function NumberContainer({ children }) {
     return (
         <View style={styles.container}>
             <Text style={styles.numberText}>
-                { children }
+                {children}
             </Text>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    container:{
+    container: {
         borderWidth: 4,
         borderColor: Colors.primaryRed,
         padding: 24,
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    numberText:{
+    numberText: {
         color: Colors.primaryRed,
         fontSize: 30,
         fontWeight: 'bold'
