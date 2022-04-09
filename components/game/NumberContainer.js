@@ -1,7 +1,5 @@
-import React from 'react'
-import Colors from '../../constants/colors'
-import { View, Text, StyleSheet } from 'react-native'
-import PrimaryButton from '../ui/PrimaryButton'
+import Colors from '../../constants/colors';
+import { View, Text, StyleSheet } from 'react-native';
 
 export default function NumberContainer({ children }) {
     return (
@@ -26,6 +24,7 @@ const styles = StyleSheet.create({
     numberText: {
         color: Colors.primaryRed,
         fontSize: 30,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        fontFamily: 'open-sans-bold'
     }
 })
