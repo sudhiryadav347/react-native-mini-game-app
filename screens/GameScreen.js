@@ -8,113 +8,117 @@ import Card from '../components/ui/Card';
 import InstructionText from '../components/ui/InstructionText';
 import { Ionicons } from '@expo/vector-icons';
 
-
 function generateRandomBetween(min, max, exclude) {
-    const rndNum = Math.floor(Math.random() * (max - min)) + min;
+  const rndNum = Math.floor(Math.random() * (max - min)) + min;
 
-    if (rndNum === exclude) {
-        return generateRandomBetween(min, max, exclude);
-    } else {
-        return rndNum;
-    }
+  if (rndNum === exclude) {
+    return generateRandomBetween(min, max, exclude);
+  } else {
+    return rndNum;
+  }
 }
 
 let minBoundary = 1;
 let maxBoundary = 100;
 
 export default function GameScreen({ userNumber, onGameOver }) {
+  const initialGuess = generateRandomBetween(1, 100, userNumber);
+  const [currentGuess, setcurrentGuess] = useState(initialGuess);
+  const [guessRounds, setGuessRounds] = useState([initialGuess]);
 
-    const initialGuess = generateRandomBetween(1, 100, userNumber);
-    const [currentGuess, setcurrentGuess] = useState(initialGuess);
-    const [guessRounds, setGuessRounds] = useState([initialGuess]);
+  useEffect(() => {
+    if (currentGuess === userNumber) onGameOver();
+  }, [currentGuess, userNumber, onGameOver]);
 
-    useEffect(() => {
-        if (currentGuess === userNumber)
-            onGameOver();
+  useEffect(() => {
+    minBoundary = 1;
+    maxBoundary = 100;
+  }, []);
 
-    }, [currentGuess, userNumber, onGameOver]);
-
-    useEffect(() => {
-        minBoundary = 1;
-        maxBoundary = 100;
-    }, []);
-
-    function nextGuessHandler(direction) {
-
-        if (
-            (direction === 'lower' && currentGuess < userNumber) ||
-            (direction === 'greater' && currentGuess > userNumber)
-        ) {
-            Alert.alert("Don't lie!", 'You know this is wrong...', [
-                { text: 'Sorry!', style: 'cancel' },
-            ]);
-            return;
-        }
-
-        if (direction === 'lower') {
-            maxBoundary = currentGuess;
-        }
-        else {
-            minBoundary = currentGuess + 1;
-        }
-        const newRndNumber = generateRandomBetween(minBoundary, maxBoundary, currentGuess);
-        setcurrentGuess(newRndNumber);
-        setGuessRounds(prevGuessRound => [newRndNumber, ...prevGuessRound]);
+  function nextGuessHandler(direction) {
+    if (
+      (direction === 'lower' && currentGuess < userNumber) ||
+      (direction === 'greater' && currentGuess > userNumber)
+    ) {
+      Alert.alert("Don't lie!", 'You know this is wrong...', [
+        { text: 'Sorry!', style: 'cancel' },
+      ]);
+      return;
     }
 
-    return (
-        <View style={styles.screen}>
-            <Title>Opponent's Guess</Title>
-            <NumberContainer>
-                {currentGuess}
-            </NumberContainer>
-            <Card>
-                <InstructionText style={styles.InstructionText}>Higher or Lower?</InstructionText>
-                <View style={styles.buttonsContainer}>
-                    <View style={styles.buttonContainer}>
-                        <PrimaryButton onPress={nextGuessHandler.bind(this, 'lower')}>
-                            <Ionicons name='md-remove' size={24} color="white" />
-                        </PrimaryButton>
-                    </View>
-                    <View style={styles.buttonContainer}>
-                        <PrimaryButton onPress={nextGuessHandler.bind(this, 'greater')}>
-                            <Ionicons name='md-add' size={24} color="white" />
-                        </PrimaryButton>
-                    </View>
-                </View>
-            </Card>
-            <View>
-                {guessRounds.map(
-                    guessRound => <Text key={guessRound}>{guessRound}</Text>
-                )}
-            </View>
+    if (direction === 'lower') {
+      maxBoundary = currentGuess;
+    } else {
+      minBoundary = currentGuess + 1;
+    }
+    const newRndNumber = generateRandomBetween(
+      minBoundary,
+      maxBoundary,
+      currentGuess
+    );
+    setcurrentGuess(newRndNumber);
+    setGuessRounds((prevGuessRound) => [newRndNumber, ...prevGuessRound]);
+  }
+
+  return (
+    <View style={styles.screen}>
+      <Title>Opponent's Guess</Title>
+      <NumberContainer>{currentGuess}</NumberContainer>
+      <Card>
+        <InstructionText style={styles.InstructionText}>
+          Higher or Lower?
+        </InstructionText>
+        <View style={styles.buttonsContainer}>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={nextGuessHandler.bind(this, 'lower')}>
+              <Ionicons name="md-remove" size={24} color="white" />
+            </PrimaryButton>
+          </View>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={nextGuessHandler.bind(this, 'greater')}>
+              <Ionicons name="md-add" size={24} color="white" />
+            </PrimaryButton>
+          </View>
         </View>
-    )
+      </Card>
+      <View>
+        <FlatList
+          data={guessRounds}
+          renderItem={(guess) => 
+            <View>
+              <Text>{guess.item}</Text>
+            </View>
+          }
+          keyExtractor={(item)=>item}
+        />
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    screen: {
-        flex: 1,
-        padding: 40,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: Colors.primaryRed400,
-        textAlign: 'center',
-        borderWidth: 2,
-        borderColor: Colors.primaryRed400,
-        padding: 10,
-    },
-    buttonsContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        textAlign: 'center'
-    },
-    buttonContainer: {
-        flex: 1
-    },
-    InstructionText: {
-        marginBottom: 12,
-    }
+  screen: {
+    flex: 1,
+    padding: 40,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: Colors.primaryRed400,
+    textAlign: 'center',
+    borderWidth: 2,
+    borderColor: Colors.primaryRed400,
+    padding: 10,
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    textAlign: 'center',
+  },
+  buttonContainer: {
+    flex: 1,
+  },
+  InstructionText: {
+    marginBottom: 12,
+  },
 });
