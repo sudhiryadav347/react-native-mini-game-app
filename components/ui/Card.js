@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: deviceWidth < 380 ? 0 : 5,
+    marginTop: deviceWidth < 380 ? 30 : 50,
     marginHorizontal: 24,
     padding: 16,
     backgroundColor: '#e69e1a',
