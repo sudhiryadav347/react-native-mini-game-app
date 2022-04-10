@@ -1,13 +1,23 @@
 import { useState } from 'react';
-import { View, TextInput, StyleSheet, Alert, Text } from 'react-native';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Alert,
+  Text,
+  Dimensions,
+} from 'react-native';
 import Colors from '../constants/colors';
 import Title from '../components/ui/Title';
 import PrimaryButton from './../components/ui/PrimaryButton';
 import Card from '../components/ui/Card';
 import InstructionText from '../components/ui/InstructionText';
+import useWindowDimensions from 'react-native/Libraries/Utilities/useWindowDimensions';
 export default function StartGameScreen({ onPickNumber }) {
-
   const [enteredNumber, setenteredNumber] = useState('');
+
+  const { width, height } = useWindowDimensions();
+
   function numberInputHandler(enteredText) {
     setenteredNumber(enteredText);
   }
@@ -30,23 +40,20 @@ export default function StartGameScreen({ onPickNumber }) {
     }
 
     onPickNumber(chosenNumber);
-
   }
 
+  const marginTopDistance = height < 380 ? 30 : 80;
+
   return (
-    <View style={styles.rootContainer}>
-      <Title>
-        Guess the number!
-      </Title>
+    <View style={[styles.rootContainer, { marginTop: marginTopDistance }]}>
+      <Title>Guess the number!</Title>
       <Card>
-        <InstructionText>
-          Enter a number.
-        </InstructionText>
+        <InstructionText>Enter a number.</InstructionText>
         <TextInput
           style={styles.numberInput}
           maxLength={2}
-          keyboardType='number-pad'
-          autoCapitalize='none'
+          keyboardType="number-pad"
+          autoCapitalize="none"
           autoCorrect={false}
           value={enteredNumber}
           onChangeText={numberInputHandler}
@@ -60,15 +67,16 @@ export default function StartGameScreen({ onPickNumber }) {
           </View>
         </View>
       </Card>
-    </View >
-  )
+    </View>
+  );
 }
 
+const deviceHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   rootContainer: {
     flex: 1,
-    marginTop: 100,
-    alignItems: 'center'
+    // marginTop: deviceHeight < 300 ? 10 : 50,
+    alignItems: 'center',
   },
   numberInput: {
     height: 50,
@@ -79,15 +87,14 @@ const styles = StyleSheet.create({
     color: '#000',
     marginVertical: 8,
     fontWeight: 'bold',
-    textAlign: 'center'
-
+    textAlign: 'center',
   },
   inputBtnContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   buttonContainer: {
-    flex: 1
-  }
+    flex: 1,
+  },
 });
